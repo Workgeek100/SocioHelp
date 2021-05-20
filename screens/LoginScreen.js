@@ -1,32 +1,33 @@
-//importing required dependencies
+//improting dependencies
 import * as React from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Button, Alert} from 'react-native';
+import {View, Text, Image, TouchableOpacity, StatusBar, StyleSheet, KeyboardAvoidingView, Button, Alert, Dimensions} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
-import {Header, Badge, Input, Divider} from 'react-native-elements';
+import {Header, Badge, Input} from 'react-native-elements';
 import firebase from 'firebase';
 import db from '../config';
+import * as Animatable from 'react-native-animatable';
+import {LinearGradient} from 'expo-linear-gradient';
+import Expo from 'expo';
+
+//importing images from assets
+var logo = require('../assets/icon.png')
 
 //importing icons
+import { MaterialIcons } from '@expo/vector-icons';
 import { Zocial } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import {MaterialCommunityIcons as Icon} from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-//importing pictures
-var logo = require("../assets/adaptive-icon.png");
-var logo2 = require("../assets/logo.png");
- 
-
 export default class LoginScreen extends React.Component{
 constructor(){
-    super()
-    //states
-    this.state={
+    super();
+    this.state = {
         email: '',
         password: '',
-        secureTextEntry : true,
-        iconName : 'eye',
+        iconName: 'eye',
+        secureTextEntry: true,
     }
 }
 
@@ -44,11 +45,6 @@ userLogin=(email,password)=>{
     })
 }
 
-//method for user to reset the password incase they forget it
-userForgotPassword=(email)=>{
-    return firebase.auth().sendPasswordResetEmail(email)
-}
-
 //method to toggle the state for securetext entry of password
 onPasswordIconPress=()=>{
     let iconName = (this.state.secureTextEntry) ? 'eye-off' : 'eye';
@@ -61,12 +57,19 @@ onPasswordIconPress=()=>{
     render(){
         return(
             <View style = {styles.container}>
-                <Image source = {logo} style = {styles.image}/>
-                <Text style = {styles.headerText}>Account Login</Text>
-                <Text style = {styles.label1}>Email Address</Text>
+                <Animatable.View 
+                style = {styles.header}
+                animation = 'fadeInUp'
+                >
+                    <Text style = {styles.textHeader}>Account Login</Text>
+                </Animatable.View>
+                <Animatable.View 
+                style = {styles.footer}
+                animation = 'fadeInUpBig'
+                >
                 <Input 
                 containerStyle = {styles.inputBox}
-                placeholder = {"abc@abc.com"}
+                placeholder = {"Email Address"}
                 placeholderTextColor = {'#393e46'}
                 clearButtonMode = {"while-editing"}
                 autoCorrect = {false}
@@ -80,10 +83,9 @@ onPasswordIconPress=()=>{
                         email:text
                     })
                 }} />
-                <Text style = {styles.label2}>Password</Text>
-                <Input  {...this.props}
+                <Input
                 containerStyle = {styles.inputBox2}
-                placeholder = {"******"}
+                placeholder = {"Password"}
                 placeholderTextColor = {'#393e46'}
                 clearButtonMode = {"while-editing"}
                 allowFontScaling = {true}
@@ -107,6 +109,16 @@ onPasswordIconPress=()=>{
                         password:text
                     })
                 }} />
+
+                {/* Button to reset password screen */}
+                <TouchableOpacity
+                onPress = {()=>{
+                    this.props.navigation.navigate("UserForgotPassword")
+                }}
+                >
+                 <Text style = {styles.underline}>Forgot password?</Text>
+                </TouchableOpacity>
+
                 {/*LOGIN Button */}
                 <TouchableOpacity 
                 style = {styles.button}
@@ -114,31 +126,47 @@ onPasswordIconPress=()=>{
                     this.userLogin(this.state.email, this.state.password)
                 }}
                 >
-                    <Text style = {styles.buttonText}>LOGIN</Text>
-                </TouchableOpacity>
-
-                 {/* Button to go to signup screen */}
-                 <TouchableOpacity
-                onPress = {()=>{
-                    this.props.navigation.navigate("Signup")
-                }}
-                >
-                    <Text style = {{marginTop: RFValue(10)}}>Not logged in? Create an Account</Text>
+                    <LinearGradient 
+                    colors={['#5db8fe', '#39cff2']}
+                    style = {styles.login}>
+                        <Text style = {styles.text}>LOGIN</Text>
+                    </LinearGradient>
                 </TouchableOpacity>
 
                 {/* Adding Divider for the entire screen */}
-                <Text style= {{color: 'grey', marginTop: RFValue(10)}}>────────────  OR  ────────────</Text>
+                <Text style= {{color: 'grey', marginTop: RFValue(10),}}>────────────  OR  ────────────</Text>
 
                 {/* Google sign in button */}
-                <TouchableOpacity 
-                style = {styles.button2}
-                onPress = {()=>{
-                    
+                <TouchableOpacity
+                style = {{marginTop: RFValue(10)}}
+                onPress={()=>{
+
                 }}
-                >
+                >   
+                    <LinearGradient 
+                        colors={['#5db8fe', '#39cff2']}
+                        style = {styles.login}>
+                        <Text style = {styles.buttonText}><AntDesign name="google" size={30} color="white" justifyContent = 'center' flexDirection = 'row' />Sign in with Google</Text>                     
+                    </LinearGradient>
                     
-                    <Text style = {styles.buttonText}><AntDesign name="google" size={30} color="white" justifyContent = 'center' flexDirection = 'row' />Sign in with Google</Text>
                 </TouchableOpacity>
+
+                {/* Adding second Divider for the entire screen */}
+                <Text style= {{color: 'grey', marginTop: RFValue(10), alignSelf: 'center'}}>──────────────────────────</Text>
+
+                {/* Button to go to signup screen */}
+                
+                <TouchableOpacity
+                   onPress = {()=>{this.props.navigation.navigate("Signup")}}
+                   >
+                    <LinearGradient 
+                    colors={['#fff', '#fff', ]}
+                    style = {styles.signup}>
+                        <Text style = {styles.text2}>Don't have an account? Create one</Text>
+                        <MaterialIcons name="navigate-next" size={30} color="white" />
+                    </LinearGradient>
+                    </TouchableOpacity>
+                </Animatable.View>
             </View>
         )
     }
@@ -147,83 +175,124 @@ onPasswordIconPress=()=>{
 const styles = StyleSheet.create({
     container : {
         flex:1,
-        backgroundColor:"#ffffff",
-        alignItems:'center',
-        justifyContent: 'flex-start',
-    },
-    header : {
-        marginTop: RFValue(0),
-        flex:0.1,
-    },
-    headerText : {
-    fontSize: RFValue(30),
-    textAlign: 'center',
-    fontWeight: 'bold',
-    padding: RFValue(40),
-    color: '#07B9FD',
-    },
-    inputBox:{
-        backgroundColor : '#E5E7EB',
-        borderColor:'#eeeeee',
-        borderRadius:RFValue(5),
-        borderWidth:RFValue(2),
-        width: RFValue(300),
-        padding:RFValue(5),
-        height: RFValue(50),
-    },
-    inputBox2:{
-        backgroundColor : '#E5E7EB',
-        borderColor:'#eeeeee',
-        borderRadius:RFValue(5),
-        borderWidth:RFValue(2),
-        width: RFValue(300),
-        padding:RFValue(5),
-        height: RFValue(50),
-    },
-    emailIcon : {
-        marginLeft : RFValue(0),
-        marginRight : RFValue(5),
-    },
-    image : {
-        width: RFValue(250),
-        height: RFValue(200),
-    },
-    passwordIcon : {
-        marginLeft: RFValue(3),
-        marginRight : RFValue(5)
-    },
-    label1: {
-        alignSelf: 'flex-start',
-    },
-    label2: {
-        alignSelf: 'flex-start',
-        marginTop: RFValue(10),
-    },
-    button : {
-        backgroundColor : "#07B9FD",
-        borderWidth:RFValue(2),
-        borderColor:"#07B9FD",
-        justifyContent:'center',
-        alignItems:'center',
-        width: RFValue(300),
-        height: RFValue(40),
-        marginTop:RFValue(20),
-        borderRadius:RFValue(5),
-    },
-    button2 : {
-        backgroundColor : "#07B9FD",
-        borderWidth:RFValue(2),
-        borderColor:"#07B9FD",
-        justifyContent:'center',
-        alignItems:'center',
-        width: RFValue(300),
-        height: RFValue(50),
-        marginTop:RFValue(20),
-        borderRadius:RFValue(5),
-    },
-    buttonText:{
-        color:"#fff",
-        fontSize:RFValue(15),
+        backgroundColor:"#05375A",
         justifyContent: 'center',
     },
+    header : {
+        flex: 1,
+        justifyContent: 'flex-end',
+        paddingHorizontal: RFValue(20),
+        paddingBottom: RFValue(50),
+    },
+    footer :{
+        flex:3,
+        backgroundColor: 'white',
+        borderTopLeftRadius: RFValue(30),
+        borderTopRightRadius: RFValue(30),
+        paddingHorizontal: RFValue(20),
+        paddingVertical: RFValue(30),
+    },
+    textHeader: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: RFValue(30),
+    },
+    login: {
+        width: RFValue(300),
+        height: RFValue(40),
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: RFValue(5),
+        flexDirection: 'row',
+    },
+    signup: {
+        width: RFValue(300),
+        height: RFValue(40),
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        borderRadius: RFValue(5),
+        flexDirection: 'row',
+        borderColor: '#5db8fe',
+        borderWidth: RFValue(1),
+        marginTop: RFValue(20),
+    },
+    text: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: RFValue(15)
+    },
+    text2: {
+        color: '#39cff2',
+        fontWeight: 'bold',
+        fontSize: RFValue(15),
+    },
+    headerText : {
+        fontSize: RFValue(30),
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: '#07B9FD',
+        },
+        inputBox:{
+            backgroundColor : '#E5E7EB',
+            borderColor:'#eeeeee',
+            borderRadius:RFValue(5),
+            borderWidth:RFValue(2),
+            width: RFValue(300),
+            padding:RFValue(5),
+            height: RFValue(50),
+            marginTop: RFValue(10),
+        },
+        inputBox2:{
+            backgroundColor : '#E5E7EB',
+            borderColor:'#ffffff',
+            borderRadius:RFValue(5),
+            borderWidth:RFValue(2),
+            width: RFValue(300),
+            padding:RFValue(5),
+            height: RFValue(50),
+            marginTop: RFValue(20),
+        },
+        emailIcon : {
+            marginLeft : RFValue(0),
+            marginRight : RFValue(5),
+        },
+        image : {
+            width: RFValue(250),
+            height: RFValue(200),
+        },
+        passwordIcon : {
+            marginLeft: RFValue(3),
+            marginRight : RFValue(5)
+        },
+        label1: {
+            alignSelf: 'flex-start',
+        },
+        label2: {
+            alignSelf: 'flex-start',
+            marginTop: RFValue(10),
+        },
+        button : {
+            marginTop:RFValue(20),
+            borderRadius:RFValue(5),
+        },
+        button2 : {
+            backgroundColor : "#07B9FD",
+            borderWidth:RFValue(2),
+            borderColor:"#07B9FD",
+            justifyContent:'center',
+            alignItems:'center',
+            width: RFValue(300),
+            height: RFValue(50),
+            marginTop:RFValue(20),
+            borderRadius:RFValue(5),
+        },
+        buttonText:{
+            color:"#fff",
+            fontSize:RFValue(15),
+            justifyContent: 'center',
+        },
+        underline: {
+            textDecorationLine: 'underline',
+            color: '#0d00ff',
+        }
 })

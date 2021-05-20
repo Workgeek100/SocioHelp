@@ -1,14 +1,21 @@
+//importing dependencies
 import * as React from 'react';
-import {TouchableOpacity, Text, View, TextInput, StyleSheet, FlatList, Image, Alert,ImageBackground, ScrollView} from 'react-native';
+import {TouchableOpacity, Text, View, Button, Platform, TextInput, StyleSheet, FlatList, Image, Alert,ImageBackground, ScrollView} from 'react-native';
 import {Badge, Icon, Header, Input} from 'react-native-elements';
 import firebase from 'firebase';
 import db from '../config';
 import {RFValue} from 'react-native-responsive-fontsize';
 import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
+import * as Animatable from 'react-native-animatable';
+import {LinearGradient} from 'expo-linear-gradient';
+
+//importing screens
+import { FloatingTitleTextInputField } from '../components/floating_title_text_input_field';
+
+//importing icons
 import { FontAwesome } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
-
-import { FloatingTitleTextInputField } from '../components/floating_title_text_input_field';
+import { Ionicons } from '@expo/vector-icons';
 
 export default class PostYourTopicScreen extends React.Component {
 constructor(){
@@ -71,13 +78,19 @@ submitIntoSeparateCollection = (userName,topic,matter,category)=>{
         }]
         return(
             <View style = {styles.container}>
-                 <Header 
-                backgroundColor = {"#00adb5"}
-                centerComponent = {{
-                    text:"Post your Topic",
-                    style : {flex:0, color:"#fff",fontWeight:'bold', fontStyle:'italic', fontSize:RFValue(25)}
-                }}
-                />
+                <Animatable.View
+                style= {styles.header}
+                animation = 'fadeInUp'
+                >
+                    <Text style = {styles.textHeader}>Post Your Topic</Text>
+                    <TouchableOpacity style = {styles.backIcon} onPress = {()=>{this.props.navigation.navigate('Forum')}}>
+                <Ionicons name="chevron-back" size={50} color="#fff" />
+                </TouchableOpacity>
+                </Animatable.View>
+                <Animatable.View
+                style= {styles.footer}
+                animation = 'fadeInUpBig'
+                >
                 <ScrollView>
                 <Text style = {styles.text}>*Required</Text>
                 <Text style = {styles.text}>Name</Text>
@@ -95,7 +108,7 @@ submitIntoSeparateCollection = (userName,topic,matter,category)=>{
                 }}
                 />
                 <Text style = {styles.text}>Topic</Text>
-                <TextInput 
+                <Input 
                 containerStyle = {styles.inputBox}
                 placeholder = {"Topic*"}
                 placeholderTextColor = {'#323232'}
@@ -159,6 +172,7 @@ submitIntoSeparateCollection = (userName,topic,matter,category)=>{
                     <FontAwesome name="home" size={50} color="black" />
                 </TouchableOpacity>
                 </ScrollView>
+                </Animatable.View>
             </View>
         )
     }
@@ -168,9 +182,14 @@ const styles = StyleSheet.create({
     container : {
         flex:1,
         marginTop:RFValue(-15),
-        backgroundColor:"#ffffff",
+        backgroundColor:"#05375A",
         alignItems:'center',
         alignSelf:'center',
+    },
+    textHeader: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: RFValue(30),
     },
     button : {
         backgroundColor : "#00adb5",
@@ -189,6 +208,21 @@ const styles = StyleSheet.create({
         fontStyle:'italic',
         alignItems:'center',
         alignSelf: 'center',
+    },
+    header : {
+        flex: 0.3,
+        justifyContent: 'flex-end',
+        paddingHorizontal: RFValue(20),
+        paddingBottom: RFValue(50),
+        marginTop: RFValue(50),
+    },
+    footer :{
+        flex:3,
+        backgroundColor: 'white',
+        borderTopLeftRadius: RFValue(30),
+        borderTopRightRadius: RFValue(30),
+        paddingHorizontal: RFValue(23),
+        paddingVertical: RFValue(30),
     },
     inputBox:{
         backgroundColor : '#00adb5',
@@ -228,7 +262,7 @@ const styles = StyleSheet.create({
     },
     text2:{
         fontWeight:'bold',
-        color:"#fff",
+        color:"black",
         fontSize:RFValue(15),
         fontStyle:'italic',
         marginLeft : RFValue(0),
@@ -237,11 +271,15 @@ const styles = StyleSheet.create({
     },
     text3:{
         fontWeight:'bold',
-        color:"#fff",
+        color:"black",
         fontSize:RFValue(15),
         fontStyle:'italic',
         //marginLeft : RFValue(170),
         marginTop : RFValue(0),
         alignSelf: 'center',
     },
+    backIcon: {
+        marginLeft: RFValue(-60),
+        marginTop: RFValue(-35),
+    }
 })

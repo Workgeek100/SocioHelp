@@ -9,6 +9,7 @@ import db from '../config';
 //importing icons
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 
 export default class IDCardScreen extends React.Component{
 constructor(){
@@ -45,9 +46,9 @@ getAllBlogs = () => {
       key={i}
       title={item.topic}
       subtitle={item.matter .split('').splice(0,100).join('') + '.....'}
-      //titleStyle={styles.titleStyle}
-      //subtitleStyle = {styles.subtitle}
-      //containerStyle = {styles.list}
+      titleStyle={styles.titleStyle}
+      subtitleStyle = {styles.subtitle}
+      containerStyle = {styles.list}
       rightElement = {
         <TouchableOpacity>
           <AntDesign name="right" size={30} color="white" />
@@ -68,13 +69,17 @@ getAllBlogs = () => {
     return (
       <View style={styles.container}>
         <Header
-          backgroundColor={"#00adb5"}
+          backgroundColor={"#07B9FD"}
           containerStyle={styles.header}
           centerComponent={{
             text: "ID Cards",
-            style: {flex: 0,color: "#fff",fontWeight: "bold",fontStyle: "italic",fontSize: RFValue(30)
-            }
+            style: {flex: 0,color: "#fff",fontWeight: "bold",fontStyle: "italic",fontSize: RFValue(30)}
           }}
+          leftComponent = {
+            <TouchableOpacity onPress = {()=>{this.props.navigation.navigate('Login')}}>
+            <Ionicons name="chevron-back" size={40} color="" />
+            </TouchableOpacity>
+            }
         />
         <View style={{ flex: 0.88, borderWidth: 2 }}>
           {
@@ -131,7 +136,7 @@ const styles = StyleSheet.create({
     button: {
       width:RFValue(150),
       alignSelf : 'center',
-      backgroundColor: "#00adb5",
+      backgroundColor: "#07B9FD",
       borderWidth: RFValue(2),
       borderColor: "#fff",
       justifyContent: "center",
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
       fontWeight: "bold",
-      color: "#fff",
+      color: "#000000",
       fontSize: RFValue(20),
       fontStyle: "italic",
       alignItems: "center"
@@ -162,7 +167,7 @@ const styles = StyleSheet.create({
     titleStyle: {
       fontSize: RFValue(25),
       textAlign: "center",
-      color:'#ffffff',
+      color:'#000000',
       fontWeight : 'bold',
       fontStyle : 'italic'
     },
@@ -170,11 +175,12 @@ const styles = StyleSheet.create({
       alignSelf : 'center',
       width : RFValue(350),
       opacity:1,
-      backgroundColor: '#00adb5',
+      backgroundColor: '#ffffff',
+      height: RFValue(50),
     },
     subtitle: {
       fontSize: RFValue(17),
       textAlign: "center",
-      color:'#ffffff',
+      color:'#000000',
     },
   });
